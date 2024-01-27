@@ -1,7 +1,9 @@
 package com.example.demo;
 
-import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+@Service
 public class bankService {
 
     int wartosc;
@@ -51,6 +53,20 @@ public class bankService {
         if (customer.getSaldo() - saldo > 0) {
             Tranzakcja tranzakcja = new Tranzakcja(customer, saldo);
             customer.setSaldo(customer.getSaldo() - saldo);
+            tranzakcja.setStatus(status.ACCEPTED);
+            tranzakcjaStorage.addTranzakcja(tranzakcja);
+            return "Status :" + status.ACCEPTED + tranzakcja.getCustomer().getSaldo();
+        }
+        else{
+            return "Status :" + status.DECLINED;
+        }
+    }
+
+    public String Wplata(int id,int saldo){
+        customer customer = findCustomerById(id);
+        if (customer.getSaldo() - saldo > 0) {
+            Tranzakcja tranzakcja = new Tranzakcja(customer, saldo);
+            customer.setSaldo(customer.getSaldo() + saldo);
             tranzakcja.setStatus(status.ACCEPTED);
             tranzakcjaStorage.addTranzakcja(tranzakcja);
             return "Status :" + status.ACCEPTED + tranzakcja.getCustomer().getSaldo();
